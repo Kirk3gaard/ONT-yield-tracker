@@ -1,0 +1,52 @@
+---
+title: "README"
+author: "Rasmus Kirkegaard"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: github_document
+always_allow_html: true
+---
+
+# ONT-yield-tracker
+Community sourced tracking of nanopore yields. Are flowcells getting better?
+
+Recently had several Nanopore PromethION flowcells going beyond 200 Gbp and wondered whether this is a common trend.
+
+
+ * Report your flowcell yields here: [Google form](https://forms.gle/nmUqXLYKG3DxP3SLA)
+ * See the reported values in this [Google sheet](https://docs.google.com/spreadsheets/d/1nnnyTM5DiRpobnvqFs0ag48_qqbuEmebVqI_UV5evr8/)
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen = 10)
+```
+
+```{r  echo=FALSE,message=FALSE,results='asis'}
+library(tidyverse)
+library(gsheet)
+library(scales)
+d<-gsheet2tbl('https://docs.google.com/spreadsheets/d/1nnnyTM5DiRpobnvqFs0ag48_qqbuEmebVqI_UV5evr8/edit?usp=sharing')
+
+```
+
+## Pores available at QC
+
+```{r echo=FALSE,message=FALSE}
+d %>% ggplot(aes(x =`Flowcell type`,y=`Pores at QC`))+geom_boxplot()+expand_limits(y=0)
+```
+
+## Data volumes vs pores at QC
+
+```{r echo=FALSE,message=FALSE}
+d %>% ggplot(aes(x=`Pores at QC`,y=`Estimated yield (Gbp)`))+geom_point()+expand_limits(x=0,y=0)
+```
+
+## Most reported flowcells
+
+```{r echo=FALSE,message=FALSE}
+d %>% group_by(`SoMe handle (claim your flowcell fame)`) %>% summarise(n=n()) %>% 
+  ggplot(aes(x=`SoMe handle (claim your flowcell fame)`,y = n))+geom_col()+coord_flip()
+```
+
