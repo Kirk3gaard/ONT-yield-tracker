@@ -40,13 +40,14 @@ d %>% ggplot(aes(x =`Flowcell type`,y=`Pores at QC`))+geom_boxplot()+expand_limi
 ## Data volumes vs pores at QC
 
 ```{r echo=FALSE,message=FALSE}
-d %>% ggplot(aes(x=`Pores at QC`,y=`Estimated yield (Gbp)`))+geom_point()+expand_limits(x=0,y=0)
+d %>% ggplot(aes(x=`Pores at QC`,y=`Estimated yield (Gbp)`,col=`Flowcell type`))+geom_point()+expand_limits(x=0,y=0)
 ```
 
 ## Most reported flowcells
 
 ```{r echo=FALSE,message=FALSE}
 d %>% group_by(`SoMe handle (claim your flowcell fame)`) %>% summarise(n=n()) %>% 
+  mutate(`SoMe handle (claim your flowcell fame)`=fct_reorder(`SoMe handle (claim your flowcell fame)`, n)) %>%
   ggplot(aes(x=`SoMe handle (claim your flowcell fame)`,y = n))+geom_col()+coord_flip()
 ```
 
